@@ -1,0 +1,54 @@
+[user]
+    email = dava1000@student.miun.se
+    name = Dan Lee Vazquez Garcia
+
+[credential]
+    helper = manager
+
+[core]
+    autocrlf = false
+    fileMode = false
+    editor = code --wait
+
+[merge]
+    tool = code
+
+[mergetool "code"]
+    prompt = true
+    keepBackup = false
+    cmd = code --wait $MERGED
+
+[diff]
+    tool = code
+
+[difftool "code"]
+    prompt = false
+    cmd = code --wait --diff $LOCAL $REMOTE
+
+[push]
+    default = simple
+
+[pull]
+    rebase = false
+
+[web]
+    browser = firefox
+
+[color "branch"]
+    current = magenta bold
+    local = yellow bold
+    remote = cyan bold
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+
+[color "status"]
+    branch = magenta bold
+    added = green bold
+    changed = yellow bold
+    untracked = red bold
+    unmerged = "#fe8019"
