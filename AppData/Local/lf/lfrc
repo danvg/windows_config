@@ -1,0 +1,4 @@
+set hidden      false
+set drawbox     true
+set mouse       true
+set tabstop     2
