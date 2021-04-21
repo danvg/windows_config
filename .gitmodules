@@ -1,0 +1,3 @@
+[submodule ".\\AppData\\Local\\nvim"]
+	path = .\\AppData\\Local\\nvim
+	url = git@github.com:danvg/neovim-lua-config.git
