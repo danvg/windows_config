@@ -2,3 +2,4 @@ set hidden      false
 set drawbox     true
 set mouse       true
 set tabstop     2
+set previewer   C:\\Users\\danle\\AppData\\Local\\lf\\preview.cmd
