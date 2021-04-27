@@ -25,5 +25,8 @@ function ls { lsd --ignore-glob="ntuser.*" --ignore-glob="NTUSER.*" --ignore-glo
 Remove-Alias cat
 function cat { bat --theme=gruvbox $args }
 
+Set-Alias vi nvim
+Set-Alias vim nvim
+
 # https://github.com/starship/starship
 Invoke-Expression (&starship init powershell)
