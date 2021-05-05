@@ -33,20 +33,21 @@
     browser = firefox
 
 [color "branch"]
-    current = magenta bold
-    local = yellow bold
-    remote = cyan bold
+    current = "#B48EAD" bold
+    local = "#EBCB8B" bold
+    remote = "#88C0D0" bold
 
 [color "diff"]
-    meta = yellow bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
-    whitespace = red reverse
+    meta = "#EBCB8B" bold
+    frag = "#B48EAD" bold
+    old = "#BF616A" bold
+    new = "#8FBCBB" bold
+    whitespace = "#BF616A" reverse
 
 [color "status"]
-    branch = magenta bold
-    added = green bold
-    changed = yellow bold
-    untracked = red bold
-    unmerged = "#fe8019"
+    branch = "#B48EAD" bold
+    added = "#8FBCBB" bold
+    changed = "#EBCB8B" bold
+    untracked = "#BF616A" bold
+    unmerged = "#D08770"
+
