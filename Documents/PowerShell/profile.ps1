@@ -23,7 +23,7 @@ Remove-Alias ls
 function ls { lsd --ignore-glob="ntuser.*" --ignore-glob="NTUSER.*" --ignore-glob="System Volume Information" $args }
 
 Remove-Alias cat
-function cat { bat --theme=gruvbox $args }
+function cat { bat $args }
 
 # https://github.com/starship/starship
 Invoke-Expression (&starship init powershell)
