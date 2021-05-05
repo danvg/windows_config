@@ -8,22 +8,20 @@
 [core]
     autocrlf = false
     fileMode = false
-    editor = code --wait
+    editor = nvim
 
 [merge]
-    tool = code
+    tool = nvimdiff
 
-[mergetool "code"]
+[mergetool "nvimdiff"]
     prompt = true
     keepBackup = false
-    cmd = code --wait $MERGED
 
 [diff]
-    tool = code
+    tool = nvimdiff
 
-[difftool "code"]
+[difftool "nvimdiff"]
     prompt = false
-    cmd = code --wait --diff $LOCAL $REMOTE
 
 [push]
     default = simple
