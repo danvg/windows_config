@@ -1,23 +1,32 @@
-add_newline=false
+add_newline = false
+scan_timeout = 10
 
 format = """
 $username\
 $hostname\
-$shlvl\
 $directory\
-$vcsh\
 $git_branch\
 $git_commit\
 $git_state\
 $git_status\
-$package\
-$memory_usage\
-$env_var\
-$custom\
 $cmd_duration\
-$line_break\
+$character\
 $jobs\
-$time\
 $status\
+$shlvl\
 $shell\
-$character"""
+[ ](#475062)\
+"""
+
+[character]
+disabled = true
+success_symbol = "[晴](#A3BE8C)"
+error_symbol = "[塚](#BF616A)"
+vicmd_symbol = "[](#88C0D0)"
+
+[directory]
+home_symbol = ""
+
+[shell]
+disabled = true
+
