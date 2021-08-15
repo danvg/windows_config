@@ -17,6 +17,8 @@ Import-Module PSFzf
 # scoop config alias @{}
 Import-Module "$($(Get-Item $(Get-Command scoop).Path).Directory.Parent.FullName)\modules\scoop-completion"
 
+Import-Module npm-completion
+
 function Get-Youtube-Music($url) { youtube-dl --extract-audio --audio-format vorbis --audio-quality 3 --output "%(title)s.%(ext)s" $url }
 
 Remove-Alias ls
