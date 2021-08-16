@@ -4,6 +4,8 @@
 
 [credential]
     helper = manager
+	helper = 
+	helper = C:/Users/danle/AppData/Local/Programs/Git\\ Credential\\ Manager\\ Core/git-credential-manager-core.exe
 
 [core]
     autocrlf = false
@@ -51,3 +53,5 @@
     untracked = "#BF616A" bold
     unmerged = "#D08770"
 
+[credential "https://dev.azure.com"]
+	useHttpPath = true
