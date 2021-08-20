@@ -11,7 +11,7 @@
     editor = nvim
 
 [merge]
-    tool = nvimdiff
+	tool = kdiff3
 
 [mergetool "nvimdiff"]
     prompt = true
