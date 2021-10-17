@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export LC_CTYPE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -36,6 +43,10 @@ alias mv="mv -iv"
 alias ls="ls --color --ignore 'ntuser*' --ignore 'NTUSER*' --ignore '\$RECYCLE.BIN'"
 alias cls="clear"
 
-source ~/.zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
-source ~/.zsh_plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-source ~/.zsh_plugins/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
+source ~/.local/share/zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source ~/.local/share/zsh/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+source ~/.local/share/zsh/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
+source ~/.local/share/zsh/powerlevel10k/powerlevel10k.zsh-theme
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
