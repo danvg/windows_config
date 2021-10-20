@@ -211,6 +211,9 @@
   :config
   (yas-reload-all))
 
+(use-package yasnippet-snippets
+  :after yasnippet)
+
 ;; Linting
 (use-package flycheck
   :defer t
@@ -235,10 +238,8 @@
 ;; Better syntax highlighting
 (use-package tree-sitter
   :init (global-tree-sitter-mode)
-  :hook ((ruby-mode . tree-sitter-hl-mode)
-         (js-mode . tree-sitter-hl-mode)
-         (typescript-mode . tree-sitter-hl-mode)
-         (go-mode . tree-sitter-hl-mode)))
+  :hook ((js-mode . tree-sitter-hl-mode)
+         (typescript-mode . tree-sitter-hl-mode)))
 (use-package tree-sitter-langs)
 
 ;; Bufferline
@@ -341,7 +342,7 @@
 (setq mouse-wheel-follow-mouse 't)
 
 ;; Fonts
-(set-face-attribute 'default nil :font "VictorMono NF" :height 130)
+(set-face-attribute 'default nil :font "JetBrainsMono NF" :height 120)
 
 ;; Parentesis completion
 (electric-pair-mode t)
