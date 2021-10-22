@@ -1,0 +1,10 @@
+CompileFlags:
+  Add: [std=c++11, -Wall, -Wextra, -pedantic]
+
+Index:
+  Background: Build
+
+Diagnostics:
+  ClangTidy:
+    Add: [clang-diagnostic-*,clang-analyzer-*,modernize-*,bugprone-*,performance-*,google-*]
+    Remove: [modernize-use-trailing-return-type,modernize-use-nodiscard,modernize-make-unique,modernize-avoid-c-arrays]
