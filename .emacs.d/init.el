@@ -5,6 +5,17 @@
 
 ;;; Code:
 
+;; User information
+
+(setq user-full-name "Dan VG"
+      user-mail-address "dava1000@student.miun.se")
+
+;; Garbage collection optimization
+
+(eval-and-compile
+  (setq gc-cons-threshold 402653184
+        gc-cons-percentage 0.6))
+
 ;; Options
 
 ;; Initial frame size
@@ -117,10 +128,12 @@
 
 ;; Use use-package as package installer
 (require 'use-package)
-(setq use-package-always-ensure t)
+(setq use-package-always-defer t
+      use-package-verbose t)
 
 ;; Vim emulation
 (use-package evil
+  :demand t
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
@@ -132,9 +145,9 @@
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
-;; Use visual line motions even outside of visual-line-mode buffers
-(evil-global-set-key 'motion "j" 'evil-next-visual-line)
-(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  ; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
 ;; Add additional evil mode support
 (use-package evil-collection
@@ -167,6 +180,7 @@
 
 ;; Fancy themes. Use M-x counsel-load-themes to change the theme.
 (use-package doom-themes
+  :demand t
   :config
   (setq doom-themes-enable-bold t
         doom-themes-enable-italic t)
@@ -176,6 +190,7 @@
 
 ;; Fancy mode line
 (use-package doom-modeline
+  :demand t
   :hook (after-init . doom-modeline-mode)
   :custom-face
   (mode-line ((t (:height 0.85))))
@@ -192,6 +207,7 @@
 
 ;; A generic completion frontend
 (use-package ivy
+  :demand t
   :diminish
   :bind (:map ivy-minibuffer-map
               ("TAB" . ivy-alt-done)
@@ -215,6 +231,7 @@
 
 ;; Various completion functions using Ivy
 (use-package counsel
+  :after ivy
   :bind (("M-x" . counsel-M-x)
          ("C-x b" . counsel-ibuffer)
          ("C-x C-f" . counsel-find-file)
@@ -291,7 +308,6 @@
 
 ;; Linting
 (use-package flycheck
-  :defer t
   :hook (lsp-mode . flycheck-mode))
 
 ;; Support for Java language
@@ -364,7 +380,7 @@
 
 ;; Bufferline
 (use-package centaur-tabs
-  :demand
+  :demand t
   :config
   (centaur-tabs-mode t)
   :custom
@@ -381,16 +397,15 @@
 
 ;; A simple directory drawer
 (use-package dired-sidebar
-  :ensure t
   :commands (dired-sidebar-toggle-sidebar))
 
 ;; Git integration
 (use-package magit
-  :ensure t)
+  :commands (magit-status magit-blame))
 
 ;; Project managment
 (use-package projectile
-  :ensure t
+  :demand t
   :init
   (projectile-mode +1)
   :bind
@@ -400,7 +415,7 @@
 
 ;; Provides further ivy integration into projectile
 (use-package counsel-projectile
-  :ensure t
+  :after projectile
   :config
   (counsel-projectile-mode))
 
@@ -413,7 +428,7 @@
                         (projects . 5)
                         (agenda . 5)))
 (use-package dashboard
-  :ensure t
+  :demand t
   :config
   (dashboard-setup-startup-hook))
 
@@ -445,6 +460,9 @@
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions #'rune/font-setup))
+
+(setq gc-cons-threshold 16777216
+      gc-cons-percentage 0.1)
 
 (provide 'init)
 ;;; init.el ends here
