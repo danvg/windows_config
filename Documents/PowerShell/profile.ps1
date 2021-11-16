@@ -2,7 +2,15 @@ Import-Module posh-git
 
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 
+# use vi mode
 Set-PSReadlineOption -EditMode vi -BellStyle None
+# keep or reset to powershell default
+Set-PSReadlineKeyHandler -Key Shift+Tab -Function TabCompletePrevious
+# define Ctrl+Tab like default Tab behavior
+Set-PSReadlineKeyHandler -Key Ctrl+Tab -Function TabCompleteNext
+# define Tab like bash
+Set-PSReadlineKeyHandler -Key Tab -Function Complete
+# history completion
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward
