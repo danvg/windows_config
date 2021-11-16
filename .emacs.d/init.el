@@ -30,7 +30,6 @@
 ;; Set the initial default buffer
 (kill-buffer "*scratch*")
 (setq default-directory "~/")
-(setq initial-buffer-choice "newfile")
 
 ;; Disable visible scrollbar
 (scroll-bar-mode -1)
