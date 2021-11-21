@@ -6,12 +6,10 @@
 ;;; Code:
 
 ;; User information
-
 (setq user-full-name "Dan VG"
       user-mail-address "dava1000@student.miun.se")
 
 ;; Garbage collection optimization
-
 (eval-and-compile
   (setq gc-cons-threshold 402653184
         gc-cons-percentage 0.6))
@@ -23,7 +21,8 @@
 (add-to-list 'default-frame-alist '(height . 38))
 
 ;; Default font settings
-(add-to-list 'default-frame-alist '(font . "JetBrainsMono NF-11"))
+(add-to-list 'default-frame-alist '(font . "JetBrainsMono NF-13"))
+(add-to-list 'default-frame-alist '(line-spacing . 0.2))
 
 ;; Some sane defaults
 (setq inhibit-startup-message t)
@@ -38,6 +37,10 @@
 ;; Write backup files to another location
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 
+;; Persistent history
+(savehist-mode)
+(setq savehist-file "~/.emacs.d/history")
+
 ;; Set the initial default buffer
 (kill-buffer "*scratch*")
 (setq default-directory "~/")
@@ -51,11 +54,11 @@
 ;; Disable tooltips
 (tooltip-mode -1)
 
-;; Command delay
-(set-fringe-mode 10)
-
 ;; Disable the menu bar
 (menu-bar-mode -1)
+
+;; Command delay
+(set-fringe-mode 10)
 
 ;; Enable visual bell
 (setq visible-bell t)
@@ -69,7 +72,7 @@
 ;; Typed text replaces selection
 (delete-selection-mode t)
 
-;; Disable line numbers in terminals
+;; Disable line numbers in some modes
 (dolist (mode '(org-mode-hook
                 term-mode-hook
                 shell-mode-hook
@@ -90,14 +93,14 @@
 (electric-pair-mode t)
 
 ;; Default encoding is UTF8 for everything
-(set-charset-priority 'unicode)
+;;(set-charset-priority 'unicode)
+(set-language-environment 'utf-8)
 (setq locale-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-(setq default-process-coding-system '(utf-8-unix . utf-8-unix))
-(set-language-environment "UTF-8")
+(setq default-process-coding-system 'utf-8-unix)
 (setq-default buffer-file-coding-system 'utf-8-unix)
 
 ;; Indentation
@@ -119,8 +122,8 @@
 (package-initialize)
 
 ;; Refresh packages if needed
-;;(unless package-archive-contents
-;;  (package-refresh-contents))
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
@@ -129,6 +132,7 @@
 ;; Use use-package as package installer
 (require 'use-package)
 (setq use-package-always-defer t
+      use-package-always-ensure t
       use-package-verbose t)
 
 ;; Vim emulation
@@ -139,15 +143,17 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
   :config
   (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
-  ; Use visual line motions even outside of visual-line-mode buffers
+  (evil-set-initial-state 'dashboard-mode 'normal)
+  ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
 
 ;; Add additional evil mode support
 (use-package evil-collection
@@ -156,6 +162,16 @@
   (evil-collection-outline-bind-tab-p nil)
   :config
   (evil-collection-init))
+
+;; Undo tree system
+(use-package undo-tree
+  :after evil
+  :diminish
+  :config
+  (setq undo-tree-auto-save-history t)
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
+  (global-undo-tree-mode t)
+  (evil-set-undo-system 'undo-tree)
 
 ;; Key menu
 (use-package which-key
@@ -169,7 +185,7 @@
   :after evil
   :config
   (general-evil-setup t)
-  (general-create-definer rune/leader-keys
+  (general-create-definer my/leader-keys
     :keymaps '(normal insert visual emacs)
     :prefix "SPC"
     :global-prefix "C-SPC"))
@@ -177,6 +193,12 @@
 ;; Icons for the modeline. Need to install the fonts first with
 ;; all-the-icons-install-all-fonts
 (use-package all-the-icons)
+
+;; Icons for the dired mode
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :hook
+  (dired-mode . all-the-icons-dired-mode))
 
 ;; Fancy themes. Use M-x counsel-load-themes to change the theme.
 (use-package doom-themes
@@ -240,7 +262,7 @@
   :config
   (setq ivy-initial-inputs-alist nil))
 
-(defun rune/lsp-mode-setup ()
+(defun my/lsp-mode-setup ()
   "Setup the LSP mode."
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
@@ -248,7 +270,7 @@
 ;; Emacs LSP client
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :hook (lsp-mode . rune/lsp-mode-setup)
+  :hook (lsp-mode . my/lsp-mode-setup)
   :init
   (setq lsp-keymap-prefix "C-c l")
   :config
@@ -260,7 +282,7 @@
   :config
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-show-hover nil)
-  (setq lsp-ui-doc-position 'bottom)
+  (setq lsp-ui-doc-position 'at-point)
   (lsp-ui-doc-show))
 
 ;; Provides an interactive ivy interface to the workspace symbol
@@ -310,10 +332,21 @@
 (use-package flycheck
   :hook (lsp-mode . flycheck-mode))
 
+;; Support for Emacs lisp language
+(add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
+
+;; Support for C/C++ language
+(add-hook 'c++-mode-hook #'flycheck-mode)
+(add-hook 'c++-mode-hook #'lsp)
+
 ;; Support for Java language
 (use-package lsp-java
   :config
   (add-hook 'java-mode-hook 'lsp))
+
+;; Support for Markdown syntax
+(use-package markdown-mode
+  :hook (markdown-mode . flycheck-mode))
 
 ;; Support for the TypeScript language
 (use-package typescript-mode
@@ -321,7 +354,7 @@
   :config
   (setq typescript-indent-level 2))
 
-(defun rune/set-js-indentation ()
+(defun my/set-js-indentation ()
   "The javascript indentation level."
   (setq js-indent-level 2)
   (setq evil-shift-width js-indent-level)
@@ -335,8 +368,8 @@
   (setq js2-mode-show-strict-warnings nil)
 
   ;; Set up proper indentation in JavaScript and JSON files
-  (add-hook 'js2-mode-hook #'rune/set-js-indentation)
-  (add-hook 'json-mode-hook #'rune/set-js-indentation))
+  (add-hook 'js2-mode-hook #'my/set-js-indentation)
+  (add-hook 'json-mode-hook #'my/set-js-indentation))
 
 ;; Pretty printer for web languages
 (use-package prettier-js
@@ -359,7 +392,6 @@
 
 ;; Key mapping helper
 (use-package hydra
-  :ensure t
   :config
   (defhydra hydra-common (:color blue)
     ("<ESC>" nil "quit")))
@@ -373,7 +405,9 @@
 (use-package tree-sitter
   :init (global-tree-sitter-mode)
   :hook ((js-mode . tree-sitter-hl-mode)
-         (typescript-mode . tree-sitter-hl-mode)))
+         (typescript-mode . tree-sitter-hl-mode)
+         (java-mode . tree-sitter-hl-mode)
+         (c++-mode . tree-sitter-hl-mode)))
 
 ;; Tree-sitter Language Bundle for Emacs
 (use-package tree-sitter-langs)
@@ -384,16 +418,28 @@
   :config
   (centaur-tabs-mode t)
   :custom
-  (centaur-tabs-gray-out-icons 'buffer)
-  (centaur-tabs-style "rounded")
-  (centaur-tabs-height 36)
+  (centaur-tabs-style "bar")
+  (centaur-tabs-height 32)
   (centaur-tabs-set-icons t)
   (centaur-tabs-set-modified-marker t)
   (centaur-tabs-modified-marker "?")
+  (centaur-tabs-gray-out-icons 'buffer)
+  (centaur-tabs-set-bar 'under)
+  (x-underline-at-descent-line t)
   (centaur-tabs-buffer-groups-function #'centaur-tabs-projectile-buffer-groups)
   :bind
   (("s-{" . #'centaur-tabs-backward)
-   ("s-}" . #'centaur-tabs-forward)))
+   ("s-}" . #'centaur-tabs-forward))
+  (:map evil-normal-state-map
+        ("g t" . centaur-tabs-forward)
+        ("g T" . centaur-tabs-backward))
+  :hook
+  (dashboard-mode . centaur-tabs-local-mode)
+  (term-mode . centaur-tabs-local-mode)
+  (calendar-mode . centaur-tabs-local-mode)
+  (org-agenda-mode . centaur-tabs-local-mode)
+  (dired-mode . centaur-tabs-local-mode)
+  (helpful-mode . centaur-tabs-local-mode))
 
 ;; A simple directory drawer
 (use-package dired-sidebar
@@ -425,17 +471,26 @@
 (setq dashboard-center-content t)
 (setq dashboard-items '((recents  . 5)
                         (bookmarks . 5)
-                        (projects . 5)
+                        (projects . 3)
                         (agenda . 5)))
 (use-package dashboard
   :demand t
   :config
-  (dashboard-setup-startup-hook))
+  (dashboard-setup-startup-hook)
+  (if (daemonp)
+      (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))))
 
-;; Add language hooks for LSP and Linting
-(add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
-(add-hook 'c++-mode-hook #'lsp)
-(add-hook 'c++-mode-hook #'flycheck-mode)
+;; Organizer
+(use-package org
+  :pin org
+  :mode ("\\.org\\'" . org-mode)
+  :config
+  (setq org-directory "~/.emacs.d/org"))
+
+;; Nicer organize bullets
+(use-package org-superstar
+  :after org
+  :hook (org-mode . org-superstar-mode))
 
 ;; Key bindings
 
@@ -448,19 +503,20 @@
   ("k" text-scale-decrease "out")
   ("f" nil "finished" :exit t))
 
-(rune/leader-keys
+(my/leader-keys
   "t" '(:ignore t :which-key "toggles")
   "ts" '(hydra-text-scale/body :which-key "scale text"))
 
 ;; Daemon
 
-(defun rune/font-setup ()
+(defun my/font-setup ()
   "Setup the fonts."
-  (set-frame-font "JetBrainsMono NF-12" nil t))
+  (set-frame-font "JetBrainsMono NF-13" nil t))
 
 (if (daemonp)
-    (add-hook 'after-make-frame-functions #'rune/font-setup))
+    (add-hook 'after-make-frame-functions #'my/font-setup))
 
+;; Revert garbage collector to sensible defaults
 (setq gc-cons-threshold 16777216
       gc-cons-percentage 0.1)
 
