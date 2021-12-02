@@ -1,7 +1,7 @@
-;;; init.el --- My personal Emacs config
+;;; init.el --- My personal Emacs configuration
 
 ;;; Commentary:
-;;; A vanilla but functional Emacs config
+;;; A vanilla but functional Emacs configuration
 
 ;;; Code:
 
@@ -16,11 +16,9 @@
 
 ;; Options
 
-;; Initial frame size
+;; Default frame properties
 (add-to-list 'default-frame-alist '(width . 110))
 (add-to-list 'default-frame-alist '(height . 38))
-
-;; Default font settings
 (add-to-list 'default-frame-alist '(font . "JetBrainsMono NF-13"))
 (add-to-list 'default-frame-alist '(line-spacing . 0.2))
 
@@ -30,8 +28,7 @@
 (setq initial-scratch-message nil)
 (setq sentence-end-double-space nil)
 
-;; Write customize variables to another file, don't polute
-;; the init.el file
+;; Write customize variables to another file, don't pollute init.el
 (setq custom-file "~/.emacs.d/custom-vars.el")
 
 ;; Write backup files to another location
@@ -45,13 +42,16 @@
 (kill-buffer "*scratch*")
 (setq default-directory "~/")
 
+;; Exclude from recent files
+(setq recentf-exclude '("~/.emacs.d/elpa/"))
+
 ;; Disable visible scrollbar
 (scroll-bar-mode -1)
 
-;; Disable the toolbar
+;; Disable the tool bar
 (tool-bar-mode -1)
 
-;; Disable tooltips
+;; Disable tool tips
 (tooltip-mode -1)
 
 ;; Disable the menu bar
@@ -63,14 +63,14 @@
 ;; Enable visual bell
 (setq visible-bell t)
 
+;; Typed text replaces selection
+(delete-selection-mode t)
+
 ;; Display column number in the ruler
 (column-number-mode t)
 
 ;; Display the line numbers
 (global-display-line-numbers-mode t)
-
-;; Typed text replaces selection
-(delete-selection-mode t)
 
 ;; Disable line numbers in some modes
 (dolist (mode '(org-mode-hook
@@ -80,20 +80,22 @@
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; Highlight the current cursor line
-(hl-line-mode t)
+(hl-line-mode 1)
 
 ;; Display a line at column 80
 (setq display-fill-column-indicator-column 80)
-(display-fill-column-indicator-mode 1)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
 ;; Scrolling
+(setq scroll-conservatively 101)
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 3)))
+(setq mouse-wheel-progressive-speed t)
 (setq mouse-wheel-follow-mouse 't)
 
 ;; Auto pairs
 (electric-pair-mode t)
 
 ;; Default encoding is UTF8 for everything
-;;(set-charset-priority 'unicode)
 (set-language-environment 'utf-8)
 (setq locale-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
@@ -137,14 +139,14 @@
 
 ;; Vim emulation
 (use-package evil
-  :demand t
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump nil)
-  (setq evil-vsplit-window-right t)
-  (setq evil-split-window-below t)
+  :demand
+  :custom
+  (evil-want-integration t)
+  (evil-want-keybinding nil)
+  (evil-want-C-u-scroll t)
+  (evil-want-C-i-jump nil)
+  (evil-vsplit-window-right t)
+  (evil-split-window-below t)
   :config
   (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
@@ -168,17 +170,18 @@
   :after evil
   :diminish
   :config
-  (setq undo-tree-auto-save-history t)
-  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
   (global-undo-tree-mode t)
   (evil-set-undo-system 'undo-tree)
+  :custom
+  (undo-tree-auto-save-history t)
+  (undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo"))))
 
 ;; Key menu
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
+  :custom
+  (which-key-idle-delay 0.3))
 
 ;; Package to handle key bindings
 (use-package general
@@ -202,17 +205,18 @@
 
 ;; Fancy themes. Use M-x counsel-load-themes to change the theme.
 (use-package doom-themes
-  :demand t
+  :demand
   :config
-  (setq doom-themes-enable-bold t
-        doom-themes-enable-italic t)
   (load-theme 'doom-dracula t)
   (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
+  (doom-themes-org-config)
+  :custom
+  (doom-themes-enable-bold t)
+  (doom-themes-enable-italic t))
 
 ;; Fancy mode line
 (use-package doom-modeline
-  :demand t
+  :demand
   :hook (after-init . doom-modeline-mode)
   :custom-face
   (mode-line ((t (:height 0.85))))
@@ -229,20 +233,21 @@
 
 ;; A generic completion frontend
 (use-package ivy
-  :demand t
+  :demand
   :diminish
-  :bind (:map ivy-minibuffer-map
-              ("TAB" . ivy-alt-done)
-              ("C-l" . ivy-alt-done)
-              ("C-j" . ivy-next-line)
-              ("C-k" . ivy-previous-line)
-              :map ivy-switch-buffer-map
-              ("C-k" . ivy-previous-line)
-              ("C-l" . ivy-done)
-              ("C-d" . ivy-switch-buffer-kill)
-              :map ivy-reverse-i-search-map
-              ("C-k" . ivy-previous-line)
-              ("C-d" . ivy-reverse-i-search-kill))
+  :bind
+  (:map ivy-minibuffer-map
+        ("TAB" . ivy-alt-done)
+        ("C-l" . ivy-alt-done)
+        ("C-j" . ivy-next-line)
+        ("C-k" . ivy-previous-line)
+        :map ivy-switch-buffer-map
+        ("C-k" . ivy-previous-line)
+        ("C-l" . ivy-done)
+        ("C-d" . ivy-switch-buffer-kill)
+        :map ivy-reverse-i-search-map
+        ("C-k" . ivy-previous-line)
+        ("C-d" . ivy-reverse-i-search-kill))
   :init
   (ivy-mode 1))
 
@@ -254,36 +259,36 @@
 ;; Various completion functions using Ivy
 (use-package counsel
   :after ivy
-  :bind (("M-x" . counsel-M-x)
-         ("C-x b" . counsel-ibuffer)
-         ("C-x C-f" . counsel-find-file)
-         :map minibuffer-local-map
-         ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (setq ivy-initial-inputs-alist nil))
-
-(defun my/lsp-mode-setup ()
-  "Setup the LSP mode."
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode))
+  :bind
+  (("M-x" . counsel-M-x)
+   ("C-x b" . counsel-ibuffer)
+   ("C-x C-f" . counsel-find-file)
+   :map minibuffer-local-map
+   ("C-r" . 'counsel-minibuffer-history))
+  :custom
+  (ivy-initial-inputs-alist nil))
 
 ;; Emacs LSP client
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
-  :hook (lsp-mode . my/lsp-mode-setup)
-  :init
-  (setq lsp-keymap-prefix "C-c l")
+  :hook
+  (c++-mode . lsp-mode)
   :config
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+  (lsp-headerline-breadcrumb-mode)
+  :custom
+  (lsp-keymap-prefix "C-c l")
+  (lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols)))
 
 ;; An UI for the LSP mode
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :config
-  (setq lsp-ui-sideline-enable t)
-  (setq lsp-ui-sideline-show-hover nil)
-  (setq lsp-ui-doc-position 'at-point)
-  (lsp-ui-doc-show))
+  (lsp-ui-doc-show)
+  :custom
+  (lsp-ui-sideline-enable t)
+  (lsp-ui-sideline-show-hover nil)
+  (lsp-ui-doc-position 'at-point))
 
 ;; Provides an interactive ivy interface to the workspace symbol
 ;; functionality offered by lsp-mode
@@ -330,61 +335,62 @@
 
 ;; Linting
 (use-package flycheck
-  :hook (lsp-mode . flycheck-mode))
+  :hook
+  (lsp-mode . flycheck-mode)
+  (emacs-lisp-mode . flycheck-mode))
 
-;; Support for Emacs lisp language
-(add-hook 'emacs-lisp-mode-hook #'flycheck-mode)
-
-;; Support for C/C++ language
-(add-hook 'c++-mode-hook #'flycheck-mode)
-(add-hook 'c++-mode-hook #'lsp)
+;; Spell-checking
+(use-package flyspell
+  :ensure nil
+  :bind
+  (:map flyspell-mouse-map ([down-mouse-3] . flyspell-correct-word))
+  :hook
+  (text-mode . flyspell-mode)
+  (prog-mode . flyspell-prog-mode)
+  :custom
+  (ispell-program-name "~/.emacs.d/hunspell/bin/hunspell")
+  (ispell-hunspell-dict-paths-alist '(("en_US" "~/.emacs.d/hunspell/share/hunspell/en_US.aff")))
+  (ispell-local-dictionary "en_US")
+  (ispell-local-dictionary-alist '(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8))))
 
 ;; Support for Java language
 (use-package lsp-java
-  :config
-  (add-hook 'java-mode-hook 'lsp))
+  :hook (java-mode . lsp-mode))
 
 ;; Support for Markdown syntax
-(use-package markdown-mode
-  :hook (markdown-mode . flycheck-mode))
+(use-package markdown-mode)
 
 ;; Support for the TypeScript language
 (use-package typescript-mode
   :mode "\\.ts\\'"
-  :config
-  (setq typescript-indent-level 2))
-
-(defun my/set-js-indentation ()
-  "The javascript indentation level."
-  (setq js-indent-level 2)
-  (setq evil-shift-width js-indent-level)
-  (setq-default tab-width 2))
+  :custom
+  (typescript-indent-level 2))
 
 ;; Support for JavaScript language
 (use-package js2-mode
   :mode "\\.jsx?\\'"
-  :config
+  :custom
   ;; Don't use built-in syntax checking
-  (setq js2-mode-show-strict-warnings nil)
-
+  (js2-mode-show-strict-warnings nil)
   ;; Set up proper indentation in JavaScript and JSON files
-  (add-hook 'js2-mode-hook #'my/set-js-indentation)
-  (add-hook 'json-mode-hook #'my/set-js-indentation))
+  (js-indent-level 2)
+  (evil-shift-width js-indent-level)
+  (default tab-width 2))
 
 ;; Pretty printer for web languages
 (use-package prettier-js
   :hook ((js2-mode . prettier-js-mode)
          (typescript-mode . prettier-js-mode))
-  :config
-  (setq prettier-js-show-errors nil))
+  :custom
+  (prettier-js-show-errors nil))
 
 ;; Support for some web languages
 (use-package web-mode
   :mode "(\\.\\(html?\\|ejs\\|tsx\\|jsx\\)\\'"
-  :config
-  (setq-default web-mode-code-indent-offset 2)
-  (setq-default web-mode-markup-indent-offset 2)
-  (setq-default web-mode-attribute-indent-offset 2))
+  :custom
+  (web-mode-code-indent-offset 2)
+  (web-mode-markup-indent-offset 2)
+  (web-mode-attribute-indent-offset 2))
 
 ;; Hide minor modes from the modeline
 (use-package diminish
@@ -396,25 +402,23 @@
   (defhydra hydra-common (:color blue)
     ("<ESC>" nil "quit")))
 
-;; Multi-colored delimeters
-(show-paren-mode t)
+;; Multi-colored delimiters
 (use-package rainbow-delimiters
-  :hook ((prog-mode . rainbow-delimiters-mode)))
+  :hook ((prog-mode . rainbow-delimiters-mode))
+  :custom
+  (show-paren-mode t))
 
 ;; Better syntax highlighting
 (use-package tree-sitter
-  :init (global-tree-sitter-mode)
-  :hook ((js-mode . tree-sitter-hl-mode)
-         (typescript-mode . tree-sitter-hl-mode)
-         (java-mode . tree-sitter-hl-mode)
-         (c++-mode . tree-sitter-hl-mode)))
+  :init (global-tree-sitter-mode))
 
 ;; Tree-sitter Language Bundle for Emacs
-(use-package tree-sitter-langs)
+(use-package tree-sitter-langs
+  :after tree-sitter)
 
-;; Bufferline
+;; Buffer-line
 (use-package centaur-tabs
-  :demand t
+  :demand
   :config
   (centaur-tabs-mode t)
   :custom
@@ -441,17 +445,13 @@
   (dired-mode . centaur-tabs-local-mode)
   (helpful-mode . centaur-tabs-local-mode))
 
-;; A simple directory drawer
-(use-package dired-sidebar
-  :commands (dired-sidebar-toggle-sidebar))
-
 ;; Git integration
 (use-package magit
   :commands (magit-status magit-blame))
 
-;; Project managment
+;; Project management
 (use-package projectile
-  :demand t
+  :demand
   :init
   (projectile-mode +1)
   :bind
@@ -466,31 +466,40 @@
   (counsel-projectile-mode))
 
 ;; A startup dashboard
-(setq dashboard-set-heading-icons t)
-(setq dashboard-set-file-icons t)
-(setq dashboard-center-content t)
-(setq dashboard-items '((recents  . 5)
-                        (bookmarks . 5)
-                        (projects . 3)
-                        (agenda . 5)))
 (use-package dashboard
-  :demand t
+  :demand
   :config
   (dashboard-setup-startup-hook)
-  (if (daemonp)
-      (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))))
+  :custom
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-center-content t)
+  (dashboard-items '((recents  . 5)
+                     (bookmarks . 5)
+                     (projects . 3)
+                     (agenda . 5))))
 
 ;; Organizer
 (use-package org
   :pin org
   :mode ("\\.org\\'" . org-mode)
-  :config
-  (setq org-directory "~/.emacs.d/org"))
+  :custom
+  (org-directory "~/.emacs.d/org"))
 
-;; Nicer organize bullets
+;; Nicer organizer bullets
 (use-package org-superstar
   :after org
   :hook (org-mode . org-superstar-mode))
+
+;; A directory drawer
+(use-package treemacs)
+(use-package treemacs-evil :after (treemacs evil))
+(use-package treemacs-projectile :after (treemacs projectile))
+(use-package treemacs-magit :after (treemacs magit))
+(use-package treemacs-icons-dired :hook (dired-mode . treemacs-icons-dired-enable-once))
+
+;; VCS gutter
+(use-package git-gutter)
 
 ;; Key bindings
 
@@ -514,7 +523,9 @@
   (set-frame-font "JetBrainsMono NF-13" nil t))
 
 (if (daemonp)
-    (add-hook 'after-make-frame-functions #'my/font-setup))
+    (progn
+      (add-hook 'after-make-frame-functions #'my/font-setup)
+      (setq initial-buffer-choice (lambda () (get-buffer "*dashboard*")))))
 
 ;; Revert garbage collector to sensible defaults
 (setq gc-cons-threshold 16777216
