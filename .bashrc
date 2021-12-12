@@ -27,13 +27,6 @@ alias mv="mv -iv"
 alias ls="ls --color --ignore 'ntuser*' --ignore 'NTUSER*' --ignore '\$RECYCLE.BIN'"
 alias cls="clear"
 
-exitstatus()
-{
-  if [[ $? == 0 ]]; then
-    printf '\e[32m\e[m'
-  else
-    printf '\e[31m\e[m'
-  fi
-}
-
-PS1='\e[34m\w\e[m $(exitstatus) '
+PROMPT_COMMAND='if [ $? = 0 ]; then\
+  PS1="\[\e[34m\][\w]\[\e[0m\] \[\e[32m\]\[\e[0m\] "; else\
+  PS1="\[\e[34m\][\w]\[\e[0m\] \[\e[31m\]\[\e[0m\] "; fi'
