@@ -36,14 +36,14 @@
 
 ;; Persistent history
 (savehist-mode)
-(setq savehist-file "~/.emacs.d/history")
+(defvar savehist-file "~/.emacs.d/history")
 
 ;; Set the initial default buffer
 (kill-buffer "*scratch*")
 (setq default-directory "~/")
 
 ;; Exclude from recent files
-(setq recentf-exclude '("~/.emacs.d/elpa/"))
+(defvar recentf-exclude '("~/.emacs.d/elpa/"))
 
 ;; Disable visible scrollbar
 (scroll-bar-mode -1)
@@ -178,10 +178,11 @@
 
 ;; Key menu
 (use-package which-key
-  :init (which-key-mode)
   :diminish which-key-mode
   :custom
-  (which-key-idle-delay 0.3))
+  (which-key-idle-delay 0.3)
+  :config
+  (which-key-mode))
 
 ;; Package to handle key bindings
 (use-package general
@@ -208,8 +209,9 @@
   :demand
   :config
   (load-theme 'doom-dracula t)
-  (doom-themes-visual-bell-config)
   (doom-themes-org-config)
+  (doom-themes-treemacs-config)
+  (doom-themes-visual-bell-config)
   :custom
   (doom-themes-enable-bold t)
   (doom-themes-enable-italic t))
@@ -495,7 +497,7 @@
 (use-package treemacs)
 (use-package treemacs-evil :after (treemacs evil))
 (use-package treemacs-projectile :after (treemacs projectile))
-(use-package treemacs-magit :after (treemacs magit))
+;(use-package treemacs-magit :after (treemacs magit))
 (use-package treemacs-icons-dired :hook (dired-mode . treemacs-icons-dired-enable-once))
 
 ;; VCS gutter
