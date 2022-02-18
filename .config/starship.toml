@@ -25,9 +25,6 @@ success_symbol = "[晴 ](#A3BE8C)"
 error_symbol = "[塚 ](#BF616A)"
 vicmd_symbol = "[ ](#88C0D0)"
 
-[directory]
-home_symbol = " "
-
 [shell]
 disabled = false
 
