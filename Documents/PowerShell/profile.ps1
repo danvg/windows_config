@@ -53,6 +53,8 @@ function ls { lsd --ignore-glob="ntuser.*" --ignore-glob="NTUSER.*" --ignore-glo
 Remove-Alias cat
 function cat { bat $args }
 
+function Select-Git-Branch { git checkout @(git branch | fzf | ForEach-Object { $_.Trim() }) }
+
 # https://github.com/starship/starship
 Invoke-Expression (&starship init powershell)
 
