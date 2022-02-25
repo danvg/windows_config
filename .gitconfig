@@ -3,7 +3,7 @@
     name = Dan Lee Vazquez Garcia
 
 [credential]
-    helper = manager
+    helper = manager-core
 
 [core]
     autocrlf = false
@@ -51,3 +51,7 @@
     untracked = "#BF616A" bold
     unmerged = "#D08770"
 
+[credential "helperselector"]
+	selected = manager-core
+[credential "https://dev.azure.com"]
+	useHttpPath = true
