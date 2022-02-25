@@ -1,0 +1,4 @@
+os:
+  editCommand: 'nvim-qt'
+  editCommandTemplate: '{{editor}} +{{line}} {{filename}}'
+  openCommand: 'nvim-qt {{filename}}'
