@@ -1,57 +1,57 @@
 [user]
-    email = dava1000@student.miun.se
-    name = Dan Lee Vazquez Garcia
+  email = dava1000@student.miun.se
+  name = Dan Lee Vazquez Garcia
 
 [credential]
-    helper = manager-core
-
-[core]
-    autocrlf = false
-    fileMode = false
-    editor = nvim
-
-[merge]
-	tool = kdiff3
-
-[mergetool "nvimdiff"]
-    prompt = true
-    keepBackup = false
-
-[diff]
-    tool = nvimdiff
-
-[difftool "nvimdiff"]
-    prompt = false
-
-[push]
-    default = simple
-
-[pull]
-    rebase = false
-
-[web]
-    browser = firefox
-
-[color "branch"]
-    current = "#B48EAD" bold
-    local = "#EBCB8B" bold
-    remote = "#88C0D0" bold
-
-[color "diff"]
-    meta = "#EBCB8B" bold
-    frag = "#B48EAD" bold
-    old = "#BF616A" bold
-    new = "#8FBCBB" bold
-    whitespace = "#BF616A" reverse
-
-[color "status"]
-    branch = "#B48EAD" bold
-    added = "#8FBCBB" bold
-    changed = "#EBCB8B" bold
-    untracked = "#BF616A" bold
-    unmerged = "#D08770"
+  helper = manager-core
 
 [credential "helperselector"]
-	selected = manager-core
-[credential "https://dev.azure.com"]
-	useHttpPath = true
+  selected = manager-core
+
+[core]
+  autocrlf = false
+  fileMode = false
+  editor = nvim
+  sshCommand = 'C:\\Windows\\System32\\OpenSSH\\ssh.exe'
+
+[merge]
+  tool = kdiff3
+
+[mergetool "nvimdiff"]
+  prompt = true
+  keepBackup = false
+
+[diff]
+  tool = nvimdiff
+
+[difftool "nvimdiff"]
+  prompt = false
+
+[push]
+  default = simple
+
+[pull]
+  rebase = false
+
+[web]
+  browser = firefox
+
+[color "branch"]
+  current = "#B48EAD" bold
+  local = "#EBCB8B" bold
+  remote = "#88C0D0" bold
+
+[color "diff"]
+  meta = "#EBCB8B" bold
+  frag = "#B48EAD" bold
+  old = "#BF616A" bold
+  new = "#8FBCBB" bold
+  whitespace = "#BF616A" reverse
+
+[color "status"]
+  branch = "#B48EAD" bold
+  added = "#8FBCBB" bold
+  changed = "#EBCB8B" bold
+  untracked = "#BF616A" bold
+  unmerged = "#D08770"
+
