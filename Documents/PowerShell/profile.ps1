@@ -9,7 +9,7 @@ Set-PSReadlineKeyHandler -Key Shift+Tab -Function TabCompletePrevious
 # define Ctrl+Tab like default Tab behavior
 Set-PSReadlineKeyHandler -Key Ctrl+Tab -Function TabCompleteNext
 # define Tab like bash
-Set-PSReadlineKeyHandler -Key Tab -Function Complete
+# Set-PSReadlineKeyHandler -Key Tab -Function Complete
 # history completion
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd
 Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward
@@ -48,10 +48,20 @@ function Get-FolderSize {
         )
       if ( (Test-Path $Path) -and (Get-Item $Path).PSIsContainer ) {
         $Measure = Get-ChildItem $Path -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum
-          $Sum = '{0:N2}' -f ($Measure.Sum / 1Gb)
-          [PSCustomObject]@{
-            "Path" = $Path
-              "Size($Gb)" = $Sum
+          switch($Measure.Sum) {
+            {$_ -gt 1GB} {
+                           '{0:0.0} GiB' -f ($_/1GB)
+                             break
+                         }
+            {$_ -gt 1MB} {
+                           '{0:0.0} MiB' -f ($_/1MB)
+                             break
+                         }
+            {$_ -gt 1KB} {
+                           '{0:0.0} KiB' -f ($_/1KB)
+                             break
+                         }
+            default { "$_ bytes" }
           }
       }
 }
@@ -59,7 +69,7 @@ function Get-FolderSize {
 function du { Get-FolderSize($args) }
 
 Remove-Alias ls
-function ls { lsd --ignore-glob="ntuser.*" --ignore-glob="NTUSER.*" --ignore-glob="System Volume Information" $args }
+function ls { lsd --ignore-glob="ntuser.*" --ignore-glob="NTUSER.*" --ignore-glob="System Volume Information" --ignore-glob="desktop.ini" $args }
 
 Remove-Alias cat
 function cat { bat $args }
