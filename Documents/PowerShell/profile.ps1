@@ -30,40 +30,40 @@ Import-Module npm-completion
 # Command completter for the winget package manager.
 Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
   param($wordToComplete, $commandAst, $cursorPosition)
-    [Console]::InputEncoding = [Console]::OutputEncoding = $OutputEncoding = [System.Text.Utf8Encoding]::new()
-    $Local:word = $wordToComplete.Replace('"', '""')
-      $Local:ast = $commandAst.ToString().Replace('"', '""')
-      winget complete --word="$Local:word" --commandline "$Local:ast" --position $cursorPosition | ForEach-Object {
-        [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
-      }
+  [Console]::InputEncoding = [Console]::OutputEncoding = $OutputEncoding = [System.Text.Utf8Encoding]::new()
+  $Local:word = $wordToComplete.Replace('"', '""')
+  $Local:ast = $commandAst.ToString().Replace('"', '""')
+  winget complete --word="$Local:word" --commandline "$Local:ast" --position $cursorPosition | ForEach-Object {
+    [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+  }
 }
 
 function Get-Youtube-Music($url) { youtube-dl --extract-audio --audio-format vorbis --audio-quality 3 --output "%(title)s.%(ext)s" $url }
 
 function Get-FolderSize {
   [CmdletBinding()]
-    Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
-        $Path
-        )
-      if ( (Test-Path $Path) -and (Get-Item $Path).PSIsContainer ) {
-        $Measure = Get-ChildItem $Path -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum
-          switch($Measure.Sum) {
-            {$_ -gt 1GB} {
-                           '{0:0.0} GiB' -f ($_/1GB)
-                             break
-                         }
-            {$_ -gt 1MB} {
-                           '{0:0.0} MiB' -f ($_/1MB)
-                             break
-                         }
-            {$_ -gt 1KB} {
-                           '{0:0.0} KiB' -f ($_/1KB)
-                             break
-                         }
-            default { "$_ bytes" }
-          }
+  Param (
+    [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+    $Path
+  )
+  if ( (Test-Path $Path) -and (Get-Item $Path).PSIsContainer ) {
+    $Measure = Get-ChildItem $Path -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum
+    switch ($Measure.Sum) {
+      { $_ -gt 1GB } {
+        '{0:0.0} GiB' -f ($_ / 1GB)
+        break
       }
+      { $_ -gt 1MB } {
+        '{0:0.0} MiB' -f ($_ / 1MB)
+        break
+      }
+      { $_ -gt 1KB } {
+        '{0:0.0} KiB' -f ($_ / 1KB)
+        break
+      }
+      default { "$_ bytes" }
+    }
+  }
 }
 
 function du { Get-FolderSize($args) }
