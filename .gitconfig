@@ -1,6 +1,9 @@
 [user]
-  email = dava1000@student.miun.se
+  email = danleedvm86@gmail.com
   name = Dan Lee Vazquez Garcia
+
+[init]
+  defaultBranch = main
 
 [credential]
   helper = manager-core
