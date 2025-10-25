@@ -1,10 +1,25 @@
 CompileFlags:
-  Add: [std=c++11, -Wall, -Wextra, -pedantic]
+  Add: [std=c++14, -Wall, -Wextra, -pedantic]
 
 Index:
   Background: Build
 
+Completion:
+  AllScopes: Yes
+  ArgumentLists: FullPlaceholders
+  # HeaderInsertion: IWYU
+  # CodePatterns: All
+
+InlayHints:
+  BlockEnd: false
+  Designators: true
+  Enabled: true
+  ParameterNames: true
+  DeducedTypes: true
+  DefaultArguments: false
+  TypeNameLimit: 24
+
 Diagnostics:
   ClangTidy:
     Add: [clang-diagnostic-*,clang-analyzer-*,modernize-*,bugprone-*,performance-*,google-*]
-    Remove: [modernize-use-trailing-return-type,modernize-use-nodiscard,modernize-make-unique,modernize-avoid-c-arrays]
+    Remove: [modernize-use-trailing-return-type,modernize-use-nodiscard,modernize-make-unique,modernize-avoid-c-arrays,google-objc-*,bugprone-easily-swappable-parameters]

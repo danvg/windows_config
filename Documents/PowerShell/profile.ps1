@@ -25,8 +25,6 @@ Import-Module PSFzf
 # scoop config alias @{}
 Import-Module "$($(Get-Item $(Get-Command scoop).Path).Directory.Parent.FullName)\modules\scoop-completion"
 
-Import-Module npm-completion
-
 # Command completter for the winget package manager.
 Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
   param($wordToComplete, $commandAst, $cursorPosition)
@@ -68,14 +66,22 @@ function Get-FolderSize {
 
 function du { Get-FolderSize($args) }
 
-Remove-Alias ls
-function ls { lsd --ignore-glob="ntuser.*" --ignore-glob="NTUSER.*" --ignore-glob="System Volume Information" --ignore-glob="desktop.ini" $args }
-
 Remove-Alias cat
 function cat { bat $args }
 
+Remove-Alias ls
+function ls { lsd $args }
+
 function Select-Git-Branch { git checkout @(git branch | fzf | ForEach-Object { $_.Trim() }) }
 
-# https://github.com/starship/starship
-Invoke-Expression (&starship init powershell)
+function Set-Window-Title { Write-Output "`e]0;$($args[0])`a" }
 
+# Add wezterm command completion
+. "$PSScriptRoot\wezterm-shell-completion.ps1"
+
+# https://ohmyposh.dev/docs/installation/prompt
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\star.omp.json" | Invoke-Expression
+# Invoke-Expression (&starship init powershell)
+
+# better path completions with zoxide
+Invoke-Expression (&{ (zoxide init powershell | Out-String) })
